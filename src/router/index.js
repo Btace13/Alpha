@@ -7,6 +7,7 @@ import Login from '@/views/Login'
 import Profile from '@/views/Profile'
 import About from '@/views/About'
 import FourOhFour from '@/views/FourOhFour'
+import Feed from '@/views/Feed'
 
 Vue.use(Router)
 
@@ -44,7 +45,11 @@ const router = new Router({
       meta: { requiresAuth: true }
     },
     { path: '/about', component: About },
-    { path: '*', component: FourOhFour }
+    { path: '*', component: FourOhFour },
+    {
+      path: '/feed',
+      component: Feed
+    }
   ]
 })
 

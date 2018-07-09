@@ -60,7 +60,7 @@ export default {
         if (this.$router.currentRoute.query.redirect) {
           this.$router.replace(this.$router.currentRoute.query.redirect)
         } else {
-          this.$router.replace('/')
+          this.$router.replace('/feed')
         }
       }
     }
