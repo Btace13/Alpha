@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
   <meta name="keywords" content="vue,vuejs,vuex,vue-router,firebase,firebaseui,boilerplate,starter,starter-kit,muse-ui">
   <meta name="description" content="Boilerplate of vue/vuex/vue(x)-router, with sass/prerendering, muse-ui, and firebase/firebaseui.">
-  <title>Vue Firebase Starter</title>
+  <title>Project Idea</title>
 
   <!--favicon start (realfavicongenerator.net)-->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -24,6 +24,8 @@
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
 
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+    crossorigin="anonymous">
 </head>
 
 <body>
@@ -36,7 +38,8 @@
   <script>
  $(document).ready(function(){
     $('.sidenav').sidenav(); 
-    $(".dropdown-trigger").dropdown({ hover: false });
+    $(".dropdown-trigger").dropdown({ hover: true });
+    $(document).ready(function(){ $('.tabs').tabs(); });
   });
   </script>
 </body>

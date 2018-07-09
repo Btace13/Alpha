@@ -4,7 +4,6 @@
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><router-link to="/profile">Profile</router-link></li>
-            <li><router-link to="/about">Dashboard</router-link></li>
             <li class="divider"></li>
             <li><router-link to="/logout">Log Out</router-link></li>
         </ul>
@@ -23,7 +22,6 @@
     <ul class="sidenav" id="mobile-demo">
         <li><router-link to="/about">About</router-link></li>
         <li v-show="user"><router-link to="/profile">Profile</router-link></li>
-        <li v-show="user"><router-link to="/about">Dashboard</router-link></li>
         <li class="divider"></li>
         <li v-show="user"><router-link to="/logout">Log Out</router-link></li>
         <li v-show="!user"><router-link to="/login">Login</router-link></li>
