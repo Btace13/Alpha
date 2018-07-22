@@ -8,12 +8,12 @@
             cupim meatball shoulder short loin drumstick ball tip turducken salami venison ribeye. Biltong short ribs pig pork pork chop fatback spare ribs sausage ham.
         </p>
         <div class="row">
-            <div class="col m6">
+            <div class="col-md-6">
                 <div>
                     <img src="../assets/img/filler.jpg" />
                 </div>
             </div>
-            <div class="col m6">
+            <div class="col-md-6">
                 <div>
                     <h3>HOW IT WORKS</h3>
                     <p>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col m6">
+            <div class="col-md-6">
                 <div>
                     <h3>THINK BIG</h3>
                     <p>
@@ -33,7 +33,7 @@
                     </p>
                 </div>
             </div>
-            <div class="col m6">
+            <div class="col-md-6">
                 <div>
                     <img src="../assets/img/filler.jpg" />
                 </div>
@@ -53,9 +53,12 @@
 
 <style>
 .aloha {
-    text-align: center
+    text-align: center;
+    margin-top: 90px;
 }
-
+.aloha div {
+    padding-top: 20px;
+}
 img {
     max-width: 100%;
 }

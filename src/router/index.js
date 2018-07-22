@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase'
 import store from '@/store'
-import Landing from '@/views/Landing'
 import Login from '@/views/Login'
 import Profile from '@/views/Profile'
 import About from '@/views/About'
@@ -16,7 +15,7 @@ const router = new Router({
   // TODO: should we remember scroll position?
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-    { path: '/', component: Landing },
+    { path: '/', component: Feed },
     {
       path: '/login',
       component: Login,

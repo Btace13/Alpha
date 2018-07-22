@@ -22,4 +22,8 @@ export default {
   *{
     font-family: 'Poppins', sans-serif;
   }
+  body{
+     background: #171918;
+     color: #fff;
+  }
 </style>

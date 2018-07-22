@@ -7,6 +7,7 @@
         <h2>Where ideas and creators collide!</h2>
         <div class="buttons">
           <router-link class="button" to="/login">Get Started</router-link>
+          <router-link class="button" to="/about">Learn More</router-link>
         </div>
       </div>
       <img class="logo" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/626071/line-logo.svg">
