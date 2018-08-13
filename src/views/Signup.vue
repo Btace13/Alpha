@@ -2,17 +2,20 @@
   <div class="content">
       <section class="section">
         <div class="container">
-          <h1 class="heading">Login In</h1>
-          <form @submit.prevent="login()">
+          <h1 class="heading">Signup</h1>
+          <form @submit.prevent="signup()">
             <b-field label="Email">
-            <b-input name="email" id="email" v-model="email" placeholder="Email" type="email" rounded></b-input>
-          </b-field>
-          <b-field label="Password">
+              <b-input name="email" id="email" v-model="email" placeholder="Email" type="email" rounded></b-input>
+            </b-field>
+            <b-field label="Username">
+              <b-input name="username" id="username" v-model="username" placeholder="Username" type="text" rounded></b-input>
+            </b-field>
+            <b-field label="Password">
               <b-input name="password" id="password" v-model="password" placeholder="Password" type="password" rounded></b-input>
-          </b-field>
-          <button v-bind:class="{ 'is-loading': isLoading }" type="submit" class="button is-fullwidth is-primary">Login</button>
+            </b-field>
+            <button v-bind:class="{ 'is-loading': isLoading }" type="submit" class="button is-fullwidth is-primary">Sign Up</button>
           </form>
-          <router-link to="/signup">Create an account</router-link>
+          <router-link to="/login">Login</router-link>
         </div>
       </section>
   </div>
@@ -21,16 +24,17 @@
 
 <script>
   export default {
-    name: 'Login',
+    name: 'About',
     data () {
       return {
         email: '',
-        password: ''
+        password: '',
+        username: ''
       }
     },
     methods: {
-      login () {
-        this.$store.dispatch('loginUser', {email: this.email, password: this.password})
+      signup () {
+        this.$store.dispatch('createUser', {email: this.email, password: this.password, username: this.username})
       }
     },
     computed: {
@@ -48,10 +52,11 @@
       user (value) {
         if (value !== null && value !== undefined) {
           this.$toast.open({
-            message: 'Welcome back!',
+            message: 'Welcome to Project: Idea!',
             type: 'is-success'
           })
           this.$router.push('/')
+          location.reload()
         }
       },
       error (value) {
@@ -69,6 +74,7 @@
   }
 </script>
 
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css" scoped>
 
 </style>

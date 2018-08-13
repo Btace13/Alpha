@@ -1,21 +1,18 @@
-var path = require('path')
-var utils = require('./utils')
-var webpack = require('webpack')
-var config = require('../config')
-var merge = require('webpack-merge')
-var baseWebpackConfig = require('./webpack.base.conf')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-var PrerenderSpaPlugin = require('prerender-spa-plugin')
-var OfflinePlugin = require('offline-plugin')
+'use strict'
+const path = require('path')
+const utils = require('./utils')
+const webpack = require('webpack')
+const config = require('../config')
+const merge = require('webpack-merge')
+const baseWebpackConfig = require('./webpack.base.conf')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-var env = process.env.NODE_ENV === 'testing'
-  ? require('../config/test.env')
-  : config.build.env
+const env = config.build.env
 
-var webpackConfig = merge(baseWebpackConfig, {
+const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -31,9 +28,9 @@ var webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env,
-      __DEV__: JSON.stringify(JSON.parse((env.NODE_ENV !== '"production"') || 'false'))
+      'process.env': env
     }),
+    // UglifyJs do not support ES6+, you can also use babel-minify for better treeshaking: https://github.com/babel/minify
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -55,9 +52,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'testing'
-        ? 'index.html'
-        : config.build.index,
+      filename: config.build.index,
       template: 'index.html',
       inject: true,
       minify: {
@@ -70,10 +65,12 @@ var webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
     }),
+    // keep module.id stable when vender modules does not change
+    new webpack.HashedModuleIdsPlugin(),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: function (module, count) {
+      minChunks: function (module) {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
@@ -97,50 +94,12 @@ var webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ]),
-    new PrerenderSpaPlugin(
-      // Path to compiled app
-      path.join(__dirname, '../dist'),
-      // List of endpoints you wish to prerender
-      // If you also wanted to prerender /about and /contact,
-      // then this would be [ '/', '/about', '/contact' ]
-      [ '/' ]
-    ),
-    // it's always better if OfflinePlugin is the last plugin added
-    new OfflinePlugin({
-      safeToUseOptionalCaches: true,
-      caches: {
-        main: [
-          'css/app.*.css',
-          'js/vendor.*.js',
-          'js/app.*.js',
-          '/'
-        ],
-        additional: [
-          ':externals:'
-        ],
-        optional: [
-          ':rest:'
-        ]
-      },
-      externals: [
-        // list assets that are not bundled by webpack here to cache them
-        '/'
-      ],
-      ServiceWorker: {
-        events: true,
-        navigateFallbackURL: '/',
-        publicPath: '/sw.js'
-      },
-      AppCache: {
-        FALLBACK: { '/': '/' }
-      }
-    })
+    ])
   ]
 })
 
 if (config.build.productionGzip) {
-  var CompressionWebpackPlugin = require('compression-webpack-plugin')
+  const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
@@ -158,7 +117,7 @@ if (config.build.productionGzip) {
 }
 
 if (config.build.bundleAnalyzerReport) {
-  var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 

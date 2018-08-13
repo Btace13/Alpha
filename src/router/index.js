@@ -1,79 +1,73 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import firebase from 'firebase'
-import store from '@/store'
-import Login from '@/views/Login'
-import Profile from '@/views/Profile'
-import About from '@/views/About'
-import FourOhFour from '@/views/FourOhFour'
-import Feed from '@/views/Feed'
-
+import AuthGuard from './auth-guard'
+import Home from '../views/Home'
+import About from '../views/About'
+import Login from '../views/Login'
+import Signup from '../views/Signup'
+import Post from '../views/Post'
+import Profile from '../views/Profile'
+import Categories from '../views/Categories'
+import NewPost from '../views/NewPost'
+import Dashboard from '../views/Dashboard'
+import EditProfile from '../views/EditProfile'
 Vue.use(Router)
-
-const router = new Router({
+export default new Router({
   mode: 'history',
-  // TODO: should we remember scroll position?
-  scrollBehavior: () => ({ y: 0 }),
+  linkActiveClass: 'is-active',
   routes: [
-    { path: '/', component: Feed },
     {
-      path: '/login',
-      component: Login,
-      beforeEnter: (to, from, next) => {
-        if (store.state.user) {
-          next(from)
-        } else {
-          next()
-        }
-      }
+      path: '/',
+      name: 'Home',
+      component: Home
     },
     {
-      path: '/logout',
-      beforeEnter: (to, from, next) => {
-        if (store.state.user) {
-          firebase.auth().signOut()
-          next('/')
-        } else {
-          next('/login')
-        }
-      }
+      path: '/about',
+      name: 'About',
+      component: About
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
+    },
+    {
+      path: '/post/:id',
+      name: 'Post',
+      props: true,
+      component: Post
     },
     {
       path: '/profile',
+      name: 'Profile',
       component: Profile,
-      meta: { requiresAuth: true }
+      beforeEnter: AuthGuard
     },
-    { path: '/about', component: About },
-    { path: '*', component: FourOhFour },
     {
-      path: '/feed',
-      component: Feed
+      path: '/categories',
+      name: 'Categories',
+      component: Categories
+    },
+    {
+      path: '/create-post',
+      name: 'New Post',
+      component: NewPost,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
+    },
+    {
+      path: '/profile/edit',
+      name: 'EditProfile',
+      component: EditProfile
     }
   ]
 })
-
-/**
- * Check if a route requires authentication.
- * This is a global before hook for all routes,
- * checks if there are `meta: { requiresAuth: true }`
- * in all matched routes and sub routes.
- * If yes, redirect to `/login` and add original path to the query.
- */
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    if (!store.state.user) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-    } else {
-      next()
-    }
-  } else {
-    next() // make sure to always call next()!
-  }
-})
-
-export default router

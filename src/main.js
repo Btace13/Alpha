@@ -1,32 +1,33 @@
-/* This is the entry point */
-
-// polyfills
-import 'es6-promise/auto'
-import 'weakmap' // for vuexfire, using (imports-loader)
-
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import store from './store'
 import router from './router'
-import { sync } from 'vuex-router-sync'
+import { store } from './store'
+import Buefy from 'buefy'
+import 'buefy/lib/buefy.css'
+import * as firebase from 'firebase'
+import firebaseConfig from './firebase-config'
 
-// Enable progressive web app support (with offline-plugin)
-if (process.env.NODE_ENV === 'production') {
-  require('./pwa')
-}
-
-// firebase
-import './initFirebase'
+/* Buefy Compoents */
+Vue.use(Buefy)
 
 Vue.config.productionTip = false
-
-// Sync the router with the vuex store. This registers `store.state.route`
-sync(store, router)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  template: '<App/>',
+  components: { App },
+  created () {
+    firebase.initializeApp(firebaseConfig)
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch('autoSignIn', user)
+      }
+    })
+    this.$store.dispatch('loadPosts')
+  }
 })

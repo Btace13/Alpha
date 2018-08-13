@@ -1,23 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { firebaseMutations } from 'vuexfire'
-
+import state from './state'
+import getters from './getters'
+import mutations from './mutations'
+import actions from './actions'
 Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  state: {
-    user: null // Will be bound as an object
-  },
-  actions: {
-  },
-  mutations: {
-    UPDATE_USER (state, user) {
-      state.user = user
-    },
-    ...firebaseMutations
-  },
-  getters: {
-  }
+export const store = new Vuex.Store({
+  state: state,
+  getters: getters,
+  mutations: mutations,
+  actions: actions
 })
-
-export default store

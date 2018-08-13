@@ -2,7 +2,7 @@
   <div class="content">
       <section class="section">
         <div class="container">
-          <h1 class="heading">{{user.username}}</h1>
+          <h1 class="heading">Dashboard</h1>
         </div>
       </section>
   </div>
@@ -15,16 +15,10 @@
     data () {
       return {
       }
-    },
-    computed: {
-      user () {
-        return this.$store.getters.User
-      }
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css" scoped>
 
 </style>
