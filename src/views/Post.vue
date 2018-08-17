@@ -7,8 +7,10 @@
           <p>{{post.user}}</p>
           <p>{{post.description}}</p>
           <p><span v-for="tag in post.tags" :key="tag.index">#{{tag}} </span></p>
-          <p>Need: <span v-for="need in post.needed" :key="need.index">{{need}}, </span></p>
+          <p>Need: <span v-for="need in post.needed" :key="need.index">{{need}} </span></p>
           <p>{{timeFilter(post.date)}}</p>
+          <p v-if="numberOfInterestedUsers">Interested: {{numberOfInterestedUsers}}</p>
+          <button @click="becomeInterested()" class="button">Interested</button>
           <div v-if="userIsCreator" @click="modalActive = true" v-bind:class="{ 'is-loading': isLoading }" class="button is-fullwidth">
             <a>
               Edit Details 
@@ -83,6 +85,10 @@
           message: 'Post Updated!',
           type: 'is-success'
         })
+      },
+      becomeInterested () {
+        this.$store.dispatch('addInterestedUser', this.post)
+        this.$store.dispatch('loadPosts')
       }
     },
     computed: {
@@ -94,6 +100,13 @@
       },
       post () {
         return this.$store.getters.singlePost(this.id)
+      },
+      numberOfInterestedUsers () {
+        if (!this.post.interestedUsers || this.post.interestedUsers === null) {
+          return
+        }
+        var count = Object.keys(this.post.interestedUsers).length
+        return count
       },
       userIsAuth () {
         return this.$store.getters.User !== null && this.$store.getters.User !== undefined

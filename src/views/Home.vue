@@ -16,6 +16,8 @@
                   <div class="content">
                     <span v-for="tag in post.tags" :key="tag.index">#{{tag}} </span>
                     <br>
+                    <span>Needed: <span v-for="needed in post.needed" :key="needed.index">{{needed}}, </span></span>
+                    <br>
                     <p>{{timeFilter(post.date)}}</p>
                     <router-link :to="'/post/' + post.id" class="button is-fullwidth">Learn More</router-link>
                   </div>

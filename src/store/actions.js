@@ -18,7 +18,8 @@ export default {
             tags: obj[key].tags,
             date: obj[key].date,
             files: obj[key].files,
-            userId: obj[key].userId
+            userId: obj[key].userId,
+            interestedUsers: obj[key].interestedUsers
           })
         }
         commit('loadPosts', posts)
@@ -86,7 +87,6 @@ export default {
 
   // Auto signing in with local storage
   autoSignIn ({commit}, payload) {
-    console.log(payload)
     commit('setUser', {
       id: payload.uid,
       username: payload.displayName,
@@ -145,5 +145,17 @@ export default {
       commit('setLoading', false)
       commit('setError', error)
     })
+  },
+  // Adding a interested user in a post
+  addInterestedUser ({commit, getters}, payload) {
+    commit('setLoading', true)
+    firebase.database().ref('posts/' + payload.id + '/interestedUsers').push(getters.User.id)
+    .then(() => {
+      console.log('interested')
+    })
+    .catch(error => {
+      alert(error)
+    })
+    commit('setLoading', false)
   }
 }
