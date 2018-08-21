@@ -5,6 +5,11 @@ export default {
     return state.user
   },
 
+  // Getting user data
+  userData (state) {
+    return state.userData
+  },
+
   // Grabs loading state
   loading (state) {
     return state.isLoading

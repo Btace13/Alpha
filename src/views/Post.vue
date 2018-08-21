@@ -10,7 +10,9 @@
           <p>Need: <span v-for="need in post.needed" :key="need.index">{{need}} </span></p>
           <p>{{timeFilter(post.date)}}</p>
           <p v-if="numberOfInterestedUsers">Interested: {{numberOfInterestedUsers}}</p>
-          <button @click="becomeInterested()" class="button">Interested</button>
+          <button v-if="!userIsInterested" @click="becomeInterested()" class="button">Interested</button>
+          <button v-if="userIsInterested" @click="becomeInterested()" class="button" >Not Interested</button>
+          <br>
           <div v-if="userIsCreator" @click="modalActive = true" v-bind:class="{ 'is-loading': isLoading }" class="button is-fullwidth">
             <a>
               Edit Details 
@@ -87,7 +89,11 @@
         })
       },
       becomeInterested () {
-        this.$store.dispatch('addInterestedUser', this.post)
+        if (this.userIsInterested) {
+          this.$store.dispatch('removeInterestedUser', this.post.id)
+        } else {
+          this.$store.dispatch('addInterestedUser', this.post.id)
+        }
         this.$store.dispatch('loadPosts')
       }
     },
@@ -117,6 +123,11 @@
         } else if (this.$store.getters.User.id === this.post.userId) {
           return true
         }
+      },
+      userIsInterested () {
+        return this.$store.getters.User.interestedPosts.findIndex(postId => {
+          return postId === this.post.id
+        }) >= 0
       }
     }
   }

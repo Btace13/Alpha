@@ -51,12 +51,12 @@
     watch: {
       user (value) {
         if (value !== null && value !== undefined) {
+          this.$router.push('/')
           this.$toast.open({
             message: 'Welcome to Project: Idea!',
             type: 'is-success'
           })
-          this.$router.push('/')
-          location.reload()
+          document.location.reload()
         }
       },
       error (value) {

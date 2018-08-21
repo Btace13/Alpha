@@ -19,7 +19,8 @@ export default {
             date: obj[key].date,
             files: obj[key].files,
             userId: obj[key].userId,
-            interestedUsers: obj[key].interestedUsers
+            interestedUsers: obj[key].interestedUsers,
+            fbKeys: []
           })
         }
         commit('loadPosts', posts)
@@ -84,26 +85,6 @@ export default {
       alert(error)
     })
   },
-
-  // Auto signing in with local storage
-  autoSignIn ({commit}, payload) {
-    commit('setUser', {
-      id: payload.uid,
-      username: payload.displayName,
-      registeredPosts: []
-    })
-  },
-
-  // Logout of account
-  logout ({commit}) {
-    firebase.auth().signOut().then(function () {
-      console.log('Signed Out')
-    }, function (error) {
-      console.log('Sign Out Error', error)
-    })
-    commit('setUser', null)
-  },
-
   // Create a new User
   createUser ({commit}, payload) {
     commit('setLoading', true)
@@ -113,7 +94,9 @@ export default {
       const newUser = {
         id: data.user.uid,
         username: payload.username,
-        registeredPosts: []
+        registeredPosts: [],
+        interestedPosts: [],
+        fbKeys: []
       }
       commit('setUser', newUser)
       data.user.updateProfile({
@@ -137,7 +120,9 @@ export default {
       const newUser = {
         id: data.user.uid,
         username: data.user.displayName,
-        registeredPosts: []
+        registeredPosts: [],
+        interestedPosts: [],
+        fbKeys: []
       }
       commit('setUser', newUser)
     })
@@ -146,16 +131,100 @@ export default {
       commit('setError', error)
     })
   },
-  // Adding a interested user in a post
-  addInterestedUser ({commit, getters}, payload) {
+
+  // Auto signing in with local storage
+  autoSignIn ({commit}, payload) {
+    commit('setUser', {
+      id: payload.uid,
+      username: payload.displayName,
+      registeredPosts: [],
+      interestedPosts: [],
+      fbKeys: []
+    })
+    firebase.database().ref('users/' + payload.id + '/interestedPosts').once('value')
+    .then(data => {
+      const interestedPosts = []
+      const obj = data.val()
+      for (let key in obj) {
+        interestedPosts.push({
+          posts: obj[key].interestedUsers
+        })
+      }
+      commit('setUserData', interestedPosts)
+    })
+  },
+
+  // Fetching User Data
+  fetchUserData ({commit, getters}) {
     commit('setLoading', true)
-    firebase.database().ref('posts/' + payload.id + '/interestedUsers').push(getters.User.id)
-    .then(() => {
-      console.log('interested')
+    firebase.database().ref('/users/' + getters.User.id + '/interestedPosts/').once('value')
+      .then(data => {
+        const dataPairs = data.val()
+        let interestedPosts = []
+        let swappedPairs = {}
+        for (let key in dataPairs) {
+          interestedPosts.push(dataPairs[key])
+          swappedPairs[dataPairs[key]] = key
+        }
+        const updatedUser = {
+          id: getters.user.id,
+          interestedPosts: interestedPosts,
+          fbKeys: swappedPairs
+        }
+        commit('setLoading', false)
+        commit('setUser', updatedUser)
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', false)
+      })
+  },
+
+  // Logout of account
+  logout ({commit}) {
+    firebase.auth().signOut().then(function () {
+      console.log('Signed Out')
+    }, function (error) {
+      console.log('Sign Out Error', error)
     })
-    .catch(error => {
-      alert(error)
-    })
+    commit('setUser', null)
+  },
+
+  // Adding a interested user in a post and a post to a user
+  addInterestedUser ({ commit, getters }, payload) {
+    commit('setLoading', true)
+    const user = getters.User
+    firebase.database().ref('/users/' + user.id).child('/interestedPosts/')
+      .push(payload)
+      .then(data => {
+        commit('addInterestedUser', { id: payload, fbKey: data.key })
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', false)
+      })
+    firebase.database().ref('posts/' + payload.id + '/interestedUsers/')
+      .push(user.id)
     commit('setLoading', false)
+  },
+
+  // Removing a interested user in a post and a post to a user
+  removeInterestedUser ({ commit, getters }, payload) {
+    commit('setLoading', true)
+    const user = getters.User
+    if (!user.fbKeys) {
+      return
+    }
+    const fbKey = user.fbKeys[payload]
+    firebase.database().ref('/users/' + user.id + '/interestedPosts/').child(fbKey)
+      .remove()
+      .then(() => {
+        commit('setLoading', false)
+        commit('removeInterestedUser', payload)
+      })
+      .catch(error => {
+        console.log(error)
+        commit('setLoading', false)
+      })
   }
 }

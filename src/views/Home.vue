@@ -1,7 +1,6 @@
 <template>
   <div class="content">
       <section class="section">
-        <div class="container is-fluid">
            <h1 class="heading">Feed</h1>
            <div class="columns">
              <div v-for="post in posts" :key="post.index" class="column is-2">
@@ -25,7 +24,6 @@
               </div>
              </div>
            </div>
-        </div>
       </section>
   </div>
 </template>

@@ -38,6 +38,23 @@ export default {
     }
   },
 
+  // adding a post to interested array
+  addInterestedUser (state, payload) {
+    const id = payload.id
+    if (state.user.interestedPosts.findIndex(post => post.id === id) >= 0) {
+      return
+    }
+    state.user.interestedPosts.push(id)
+    state.user.fbKeys[id] = payload.fbKey
+  },
+
+  // removing a post to interested array
+  removeInterestedUser (state, payload) {
+    const interestedPosts = state.user.interestedPosts
+    interestedPosts.splice(interestedPosts.findIndex(post => post.id === payload), 1)
+    Reflect.deleteProperty(state.user.fbKeys, payload)
+  },
+
   // Set user in state
   setUser (state, payload) {
     state.user = payload

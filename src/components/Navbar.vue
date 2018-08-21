@@ -23,7 +23,7 @@
               </div>
               <div v-show="isUser" class="navbar-item has-dropdown is-hoverable">
                 <a href="#" class="navbar-link">
-                  User
+                  {{user.username}}
                 </a>
                 <div class="navbar-dropdown is-boxed">
                   <router-link class="navbar-item" to="/dashboard">
@@ -54,6 +54,9 @@ export default {
   computed: {
     isUser () {
       return this.$store.getters.User !== null && this.$store.getters.User !== undefined
+    },
+    user () {
+      return this.$store.getters.User
     }
   },
   methods: {
