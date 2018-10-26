@@ -5,6 +5,9 @@
         <router-link class="navbar-item" to="/">
           <img src="../assets/logo.png" alt="Project: Idea">
         </router-link>
+        <router-link class="navbar-item" to="/">
+         Home
+        </router-link>
         <div class="navbar-burger burger" data-target="mobileNavbar">
           <span></span>
           <span></span>
@@ -22,7 +25,7 @@
                 <a class="navbar-item" href="/login">Login / Register</a>
               </div>
               <div v-show="isUser" class="navbar-item has-dropdown is-hoverable">
-                <a href="#" class="navbar-link">
+                <a v-if="user" href="#" class="navbar-link">
                   {{user.username}}
                 </a>
                 <div class="navbar-dropdown is-boxed">

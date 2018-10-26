@@ -6,12 +6,19 @@
           </h1>
           <p>{{post.user}}</p>
           <p>{{post.description}}</p>
+          <p>Location: {{post.location}}</p>
           <p><span v-for="tag in post.tags" :key="tag.index">#{{tag}} </span></p>
           <p>Need: <span v-for="need in post.needed" :key="need.index">{{need}} </span></p>
           <p>{{timeFilter(post.date)}}</p>
           <p v-if="numberOfInterestedUsers">Interested: {{numberOfInterestedUsers}}</p>
-          <button v-if="!userIsInterested" @click="becomeInterested()" class="button">Interested</button>
-          <button v-if="userIsInterested" @click="becomeInterested()" class="button" >Not Interested</button>
+          <div v-if="!userIsCreator">
+          <button v-if="!userIsInterested" @click="toggleInterested()" class="button">Interested</button>
+          <button v-if="userIsInterested" @click="toggleInterested()" class="button" >Not Interested</button>
+          </div>
+          <div v-else>
+            <a href="#">See interested users</a>
+          </div>
+          <br>
           <br>
           <div v-if="userIsCreator" @click="modalActive = true" v-bind:class="{ 'is-loading': isLoading }" class="button is-fullwidth">
             <a>
@@ -88,11 +95,11 @@
           type: 'is-success'
         })
       },
-      becomeInterested () {
+      toggleInterested () {
         if (this.userIsInterested) {
-          this.$store.dispatch('removeInterestedUser', this.post.id)
+          this.$store.dispatch('removeInterestedUser', this.post)
         } else {
-          this.$store.dispatch('addInterestedUser', this.post.id)
+          this.$store.dispatch('addInterestedUser', this.post)
         }
         this.$store.dispatch('loadPosts')
       }

@@ -4,32 +4,30 @@ export default {
   // Load in all the posts from Firebase
   loadPosts ({commit}) {
     commit('setLoading', true)
-    firebase.database().ref('posts').once('value')
-      .then(data => {
-        const posts = []
-        const obj = data.val()
-        for (let key in obj) {
-          posts.push({
-            id: key,
-            title: obj[key].title,
-            location: obj[key].location,
-            description: obj[key].description,
-            needed: obj[key].needed,
-            tags: obj[key].tags,
-            date: obj[key].date,
-            files: obj[key].files,
-            userId: obj[key].userId,
-            interestedUsers: obj[key].interestedUsers,
-            fbKeys: []
-          })
-        }
-        commit('loadPosts', posts)
-        commit('setLoading', false)
+    const postsCollection = firebase
+      .firestore()
+      .collection('posts')
+
+    postsCollection.onSnapshot((postRef) => {
+      const posts = []
+      postRef.forEach((doc) => {
+        posts.push({
+          id: doc.id,
+          title: doc.data().title,
+          location: doc.data().location,
+          description: doc.data().description,
+          needed: doc.data().needed,
+          tags: doc.data().tags,
+          date: doc.data().date,
+          files: doc.data().files,
+          userId: doc.data().userId,
+          interestedUsers: doc.data().interestedUsers,
+          fbKeys: []
+        })
       })
-      .catch(error => {
-        alert(error)
-        commit('setLoading', false)
-      })
+      commit('loadPosts', posts)
+      commit('setLoading', false)
+    })
   },
 
   // Creating a post
@@ -42,16 +40,14 @@ export default {
       tags: payload.tags,
       date: payload.date,
       files: payload.files,
-      userId: getters.User.id
+      userId: getters.User.id,
+      interestedUsers: []
     }
-    firebase.database().ref('posts').push(post)
-    .then(data => {
-      const key = data.key
-      commit('createPost', {
-        ...payload,
-        id: key
-      })
-    })
+    firebase
+    .firestore()
+    .collection('posts')
+    .add(post)
+    .then(() => console.log('added post'))
     .catch(error => {
       alert(error)
     })
@@ -76,23 +72,28 @@ export default {
     if (payload.tags) {
       updatedPost.tags = payload.tags
     }
-    firebase.database().ref('posts').child(payload.id).update(updatedPost)
-    .then(() => {
-      commit('setLoading', false)
-      commit('updatePost', payload)
-    })
-    .catch(error => {
-      alert(error)
-    })
+    firebase
+      .firestore()
+      .collection('posts')
+      .doc(payload.id)
+      .set(updatedPost, {merge: true})
+        .then(() => {
+          commit('setLoading', false)
+          commit('updatePost', payload)
+        })
+        .catch(error => {
+          alert(error)
+        })
   },
   // Create a new User
-  createUser ({commit}, payload) {
+  createUser ({commit, getters}, payload) {
     commit('setLoading', true)
     commit('clearError')
     firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
     .then((data) => {
       const newUser = {
         id: data.user.uid,
+        email: data.user.email,
         username: payload.username,
         registeredPosts: [],
         interestedPosts: [],
@@ -103,6 +104,17 @@ export default {
         displayName: payload.username
       })
       commit('setLoading', false)
+    })
+    .then(() => {
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(getters.User.id)
+        .set(getters.User)
+        .catch(error => {
+          alert(error)
+          commit('setLoading', false)
+        })
     })
     .catch(error => {
       commit('setLoading', false)
@@ -119,12 +131,21 @@ export default {
       commit('setLoading', false)
       const newUser = {
         id: data.user.uid,
+        email: data.user.email,
         username: data.user.displayName,
         registeredPosts: [],
         interestedPosts: [],
         fbKeys: []
       }
       commit('setUser', newUser)
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(data.user.uid)
+        .get()
+        .then(doc => {
+          commit('setUser', doc.data())
+        })
     })
     .catch((error) => {
       commit('setLoading', false)
@@ -133,51 +154,23 @@ export default {
   },
 
   // Auto signing in with local storage
-  autoSignIn ({commit}, payload) {
+  autoSignIn ({commit, getters}, payload) {
     commit('setUser', {
       id: payload.uid,
+      email: payload.email,
       username: payload.displayName,
       registeredPosts: [],
       interestedPosts: [],
       fbKeys: []
     })
-    firebase.database().ref('users/' + payload.id + '/interestedPosts').once('value')
-    .then(data => {
-      const interestedPosts = []
-      const obj = data.val()
-      for (let key in obj) {
-        interestedPosts.push({
-          posts: obj[key].interestedUsers
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(payload.uid)
+      .get()
+        .then(doc => {
+          commit('setUser', doc.data())
         })
-      }
-      commit('setUserData', interestedPosts)
-    })
-  },
-
-  // Fetching User Data
-  fetchUserData ({commit, getters}) {
-    commit('setLoading', true)
-    firebase.database().ref('/users/' + getters.User.id + '/interestedPosts/').once('value')
-      .then(data => {
-        const dataPairs = data.val()
-        let interestedPosts = []
-        let swappedPairs = {}
-        for (let key in dataPairs) {
-          interestedPosts.push(dataPairs[key])
-          swappedPairs[dataPairs[key]] = key
-        }
-        const updatedUser = {
-          id: getters.user.id,
-          interestedPosts: interestedPosts,
-          fbKeys: swappedPairs
-        }
-        commit('setLoading', false)
-        commit('setUser', updatedUser)
-      })
-      .catch(error => {
-        console.log(error)
-        commit('setLoading', false)
-      })
   },
 
   // Logout of account
@@ -194,37 +187,79 @@ export default {
   addInterestedUser ({ commit, getters }, payload) {
     commit('setLoading', true)
     const user = getters.User
-    firebase.database().ref('/users/' + user.id).child('/interestedPosts/')
-      .push(payload)
-      .then(data => {
-        commit('addInterestedUser', { id: payload, fbKey: data.key })
+    const newInterestedPost = payload.id
+    firebase
+      .firestore()
+        .collection('users')
+        .doc(user.id)
+        .update({
+          interestedPosts: firebase.firestore.FieldValue.arrayUnion(newInterestedPost)
+        })
+        .then(() => {
+          commit('updatePost', payload)
+          commit('addInterestedUser', payload)
+        })
+        .catch(error => {
+          alert(error)
+        })
+    firebase
+      .firestore()
+      .collection('posts')
+      .doc(newInterestedPost)
+      .update({
+        interestedUsers: firebase
+          .firestore
+          .FieldValue
+          .arrayUnion(user.id)
       })
-      .catch(error => {
-        console.log(error)
+      .then(() => {
         commit('setLoading', false)
       })
-    firebase.database().ref('posts/' + payload.id + '/interestedUsers/')
-      .push(user.id)
-    commit('setLoading', false)
+      .catch(error => {
+        alert(error)
+      })
   },
 
   // Removing a interested user in a post and a post to a user
   removeInterestedUser ({ commit, getters }, payload) {
     commit('setLoading', true)
     const user = getters.User
+    const postToRemove = payload.id
     if (!user.fbKeys) {
       return
     }
-    const fbKey = user.fbKeys[payload]
-    firebase.database().ref('/users/' + user.id + '/interestedPosts/').child(fbKey)
-      .remove()
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(user.id)
+      .update({
+        interestedPosts: firebase
+          .firestore
+          .FieldValue
+          .arrayRemove(postToRemove)
+      })
       .then(() => {
-        commit('setLoading', false)
+        commit('updatePost', payload)
         commit('removeInterestedUser', payload)
       })
       .catch(error => {
-        console.log(error)
+        alert(error)
+      })
+    firebase
+      .firestore()
+      .collection('posts')
+      .doc(postToRemove)
+      .update({
+        interestedUsers: firebase
+          .firestore
+          .FieldValue
+          .arrayRemove(user.id)
+      })
+      .then(() => {
         commit('setLoading', false)
+      })
+      .catch(error => {
+        alert(error)
       })
   }
 }

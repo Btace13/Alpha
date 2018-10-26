@@ -51,7 +51,7 @@ export default {
   // removing a post to interested array
   removeInterestedUser (state, payload) {
     const interestedPosts = state.user.interestedPosts
-    interestedPosts.splice(interestedPosts.findIndex(post => post.id === payload), 1)
+    interestedPosts.splice(interestedPosts.findIndex(post => post.id === payload.id), 1)
     Reflect.deleteProperty(state.user.fbKeys, payload)
   },
 

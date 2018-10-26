@@ -1,9 +1,10 @@
 <template>
-  <div class="content">
+  <div class="container is-fluid">
+    <div class="content">
       <section class="section">
            <h1 class="heading">Feed</h1>
-           <div class="columns">
-             <div v-for="post in posts" :key="post.index" class="column is-2">
+           <div class="columns is-multiline">
+             <div v-for="post in posts" :key="post.index" class="column is-3">
                <div class="card">
                 <div class="card-content">
                   <div class="media">
@@ -26,6 +27,7 @@
            </div>
       </section>
   </div>
+  </div>
 </template>
 
 
@@ -47,5 +49,4 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
 </style>

@@ -86,7 +86,6 @@
           type: 'is-success'
         })
         this.$router.push('/')
-        location.reload()
       }
     }
   }

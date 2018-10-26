@@ -56,7 +56,6 @@
             message: 'Welcome to Project: Idea!',
             type: 'is-success'
           })
-          document.location.reload()
         }
       },
       error (value) {

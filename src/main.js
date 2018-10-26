@@ -6,11 +6,16 @@ import router from './router'
 import { store } from './store'
 import Buefy from 'buefy'
 import 'buefy/lib/buefy.css'
-import * as firebase from 'firebase'
+import VueFire from 'vuefire'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import firebaseConfig from './firebase-config'
 
 /* Buefy Compoents */
 Vue.use(Buefy)
+
+/* VueFire */
+Vue.use(VueFire)
 
 Vue.config.productionTip = false
 

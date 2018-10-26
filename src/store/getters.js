@@ -5,7 +5,7 @@ export default {
     return state.user
   },
 
-  // Getting user data
+  // Grabs user data
   userData (state) {
     return state.userData
   },
