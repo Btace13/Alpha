@@ -25,8 +25,13 @@
                 <a class="navbar-item" href="/login">Login / Register</a>
               </div>
               <div v-show="isUser" class="navbar-item has-dropdown is-hoverable">
+<<<<<<< HEAD
                 <a v-if="user" href="#" class="navbar-link">
                   {{user.username}}
+=======
+                <a href="#" class="navbar-link">
+                  More
+>>>>>>> 903fbe7fe3a046fe91380fd4fcf3444ad54aa9a3
                 </a>
                 <div class="navbar-dropdown is-boxed">
                   <router-link class="navbar-item" to="/dashboard">
