@@ -97,6 +97,15 @@ export default {
         username: payload.username,
         registeredPosts: [],
         interestedPosts: [],
+        contact: {
+          facebook: '',
+          twitter: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          dribbble: '',
+          behance: ''
+        },
         fbKeys: []
       }
       commit('setUser', newUser)
@@ -135,6 +144,15 @@ export default {
         username: data.user.displayName,
         registeredPosts: [],
         interestedPosts: [],
+        contact: {
+          facebook: '',
+          twitter: '',
+          linkedin: '',
+          instagram: '',
+          github: '',
+          dribbble: '',
+          behance: ''
+        },
         fbKeys: []
       }
       commit('setUser', newUser)

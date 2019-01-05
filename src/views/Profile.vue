@@ -42,31 +42,63 @@
         </div>
         <div class="profileItem">
           <b-field label="Contact">
-            <span v-if="!editMode">{{user.bio}}</span>
+            <div v-if="!editMode">
+              <p><i class="mdi mdi-facebook" aria-hidden="true"></i>: {{user.contact.facebook}} </p>
+              <p><i class="mdi mdi-twitter" aria-hidden="true"></i>: {{user.contact.twitter}} </p>
+              <p><i class="mdi mdi-linkedin" aria-hidden="true"></i>: {{user.contact.linkedin}} </p>
+              <p><i class="mdi mdi-instagram" aria-hidden="true"></i>: {{user.contact.instagram}} </p>
+              <p><i class="mdi mdi-github-face" aria-hidden="true"></i>: {{user.contact.github}} </p>
+              <p><i class="mdi mdi-dribbble" aria-hidden="true"></i>: {{user.contact.dribbble}} </p>
+              <p><i class="mdi mdi-behance" aria-hidden="true"></i>: {{user.contact.behance}} </p>
+            </div>
             <div v-else>
-            <b-input placeholder="Phone Number"
-                icon="phone">
-            </b-input>
+            <b-field>
+              <b-input placeholder="Phone Number"
+                  icon="phone">
+              </b-input>
+            </b-field>
             <br>
-             <b-input placeholder="Facebook Profile Link"
-                icon="facebook">
-            </b-input>
+             <b-field>
+              <b-input placeholder="Facebook Profile Link"
+                  icon="facebook">
+              </b-input>
+            </b-field>            
             <br>
-            <b-input placeholder="Twitter Profile Link"
-                icon="twitter">
-            </b-input>
+            <b-field>
+              <b-input placeholder="Twitter Profile Link"
+                  icon="twitter">
+              </b-input>
+            </b-field>
             <br>
-            <b-input placeholder="Linkedin Profile Link"
-                icon="linkedin">
-            </b-input>
+            <b-field>
+              <b-input placeholder="Linkedin Profile Link"
+                  icon="linkedin">
+              </b-input>
+            </b-field>
             <br>
-            <b-input placeholder="Github Profile Link"
-                icon="github-face">
-            </b-input>
+            <b-field>
+              <b-input placeholder="Github Profile Link"
+                  icon="github-face">
+              </b-input>
+            </b-field>
             <br>
-            <b-input placeholder="Instagram Profile Link"
-                icon="instagram">
-            </b-input>
+            <b-field>
+              <b-input placeholder="Instagram Profile Link"
+                  icon="instagram">
+              </b-input>
+            </b-field>
+            <br>
+            <b-field>
+              <b-input placeholder="Dribbble Profile Link"
+                  icon="dribbble">
+              </b-input>
+            </b-field>
+            <br>
+            <b-field>
+              <b-input placeholder="Behance Profile Link"
+                  icon="behance">
+              </b-input>
+            </b-field>
             <br>
             </div>
         </b-field>
@@ -103,6 +135,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css" scoped>
+ @import 'https://use.fontawesome.com/releases/v5.6.3/css/all.css';
   .profileItem{
     margin-bottom: 30px
   }

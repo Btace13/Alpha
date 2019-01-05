@@ -40,7 +40,8 @@ export default new Router({
       path: '/post/:id',
       name: 'Post',
       props: true,
-      component: Post
+      component: Post,
+      beforeEnter: AuthGuard
     },
     {
       path: '/profile',
