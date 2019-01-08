@@ -12,16 +12,22 @@
               </b-icon>
             </a>
             <div v-else>
-            <a class="button is-success">
-              <span>Save Changes</span>
+            <a v-on:click="updateProfile" class="button is-success">
+              <span  style="color: #000;">Save Changes</span>
               <span class="icon is-small">
-                <i class="fas fa-save"></i>
+                <b-icon
+                icon="check"
+                size="is-small">
+              </b-icon>
               </span>
             </a>
             <a class="button" @click="editMode = !editMode">
               <span>Cancel</span>
               <span class="icon is-small">
-                <i class="fas fa-times"></i>
+               <b-icon
+                icon="cancel"
+                size="is-small">
+              </b-icon>
               </span>
             </a>
             </div>
@@ -51,54 +57,70 @@
               <p><i class="mdi mdi-dribbble" aria-hidden="true"></i>: {{user.contact.dribbble}} </p>
               <p><i class="mdi mdi-behance" aria-hidden="true"></i>: {{user.contact.behance}} </p>
             </div>
-            <div v-else>
+            <div v-else class="columns is-multiline is-desktop">
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Phone Number"
                   icon="phone">
               </b-input>
             </b-field>
+            </div>
             <br>
+             <div class="column is-half is-full-mobile">
              <b-field>
               <b-input placeholder="Facebook Profile Link"
                   icon="facebook">
               </b-input>
             </b-field>            
+            </div>
             <br>
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Twitter Profile Link"
                   icon="twitter">
               </b-input>
             </b-field>
+            </div>
             <br>
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Linkedin Profile Link"
                   icon="linkedin">
               </b-input>
             </b-field>
+            </div>
             <br>
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Github Profile Link"
                   icon="github-face">
               </b-input>
             </b-field>
+            </div>
             <br>
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Instagram Profile Link"
                   icon="instagram">
               </b-input>
             </b-field>
+            </div>
             <br>
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Dribbble Profile Link"
                   icon="dribbble">
               </b-input>
             </b-field>
+            </div>
             <br>
+            <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Behance Profile Link"
                   icon="behance">
               </b-input>
             </b-field>
+            </div>
             <br>
             </div>
         </b-field>
@@ -120,9 +142,48 @@
 <script>
   export default {
     name: 'About',
+    methods: {
+      updateProfile () {
+        // this.$store.dispatch('updateProfile', {
+        //   username: this.updatedProfile.username,
+        //   bio: this.updatedProfile.bio,
+        //   skills: this.updatedProfile.skills,
+        //   contact: {
+        //     facebook: this.updatedProfile.contact.facebook,
+        //     twitter: this.updatedProfile.contact.twitter,
+        //     instagram: this.updatedProfile.contact.instagram,
+        //     linkedin: this.updatedProfile.contact.linkedin,
+        //     github: this.updatedProfile.contact.github,
+        //     behance: this.updatedProfile.contact.behance,
+        //     dribbble: this.updatedProfile.contact.dribbble,
+        //     phone: this.updatedProfile.contact.phone
+        //   }
+        // })
+        this.$toast.open({
+          message: 'Profile Updated!',
+          type: 'is-success'
+        })
+        this.editMode = false
+      }
+    },
     data () {
       return {
-        editMode: false
+        editMode: false,
+        updatedProfile: {
+          username: '',
+          bio: '',
+          skills: [],
+          contact: {
+            facebook: '',
+            twitter: '',
+            instagram: '',
+            linkedin: '',
+            github: '',
+            behance: '',
+            dribbble: '',
+            phone: ''
+          }
+        }
       }
     },
     computed: {
@@ -134,9 +195,18 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="css" scoped>
+<style lang="css">
  @import 'https://use.fontawesome.com/releases/v5.6.3/css/all.css';
   .profileItem{
     margin-bottom: 30px
+  }
+  input.input, textarea.textarea {
+    border-color: #777;
+  }
+  input.input::placeholder, textarea.textarea::placeholder{
+    color: #666;
+  }
+  span.icon i {
+    color: #333;
   }
 </style>
