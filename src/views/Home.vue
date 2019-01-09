@@ -4,7 +4,7 @@
       <section class="section">
            <h1 class="heading">Feed</h1>
            <div class="columns is-multiline">
-             <div v-for="post in posts" :key="post.index" class="column is-3">
+             <div v-for="post in posts" :key="post.index" class="column is-4-desktop is-3-fullhd is-6-tablet">
                <div class="card">
                 <div class="card-content">
                   <div class="media">

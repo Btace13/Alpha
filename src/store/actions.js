@@ -124,6 +124,7 @@ export default {
         job: '',
         email: data.user.email,
         username: payload.username,
+        url: data.user.uid,
         registeredPosts: [],
         interestedPosts: [],
         contact: {
@@ -167,24 +168,24 @@ export default {
     firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
     .then((data) => {
       commit('setLoading', false)
-      const newUser = {
-        id: data.user.uid,
-        email: data.user.email,
-        username: data.user.displayName,
-        registeredPosts: [],
-        interestedPosts: [],
-        contact: {
-          facebook: '',
-          twitter: '',
-          linkedin: '',
-          instagram: '',
-          github: '',
-          dribbble: '',
-          behance: ''
-        },
-        fbKeys: []
-      }
-      commit('setUser', newUser)
+      // const newUser = {
+      //   id: data.user.uid,
+      //   email: data.user.email,
+      //   username: data.user.displayName,
+      //   registeredPosts: [],
+      //   interestedPosts: [],
+      //   contact: {
+      //     facebook: '',
+      //     twitter: '',
+      //     linkedin: '',
+      //     instagram: '',
+      //     github: '',
+      //     dribbble: '',
+      //     behance: ''
+      //   },
+      //   fbKeys: []
+      // }
+      // commit('setUser', newUser)
       firebase
         .firestore()
         .collection('users')
