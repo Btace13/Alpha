@@ -85,6 +85,32 @@ export default {
           alert(error)
         })
   },
+
+  // Update User Profile
+
+  updateProfile ({ commit, getters }, payload) {
+    let user = getters.User
+    commit('setLoading', true)
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(user.id)
+      .update(payload)
+      .then(() => {
+        commit('setLoading', false)
+        firebase.firestore()
+          .collection('users')
+          .doc(user.id)
+          .get()
+          .then(data => {
+            commit('setUser', data.data())
+          })
+      })
+      .catch(error => {
+        alert(error)
+      })
+  },
+
   // Create a new User
   createUser ({commit, getters}, payload) {
     commit('setLoading', true)
@@ -93,6 +119,9 @@ export default {
     .then((data) => {
       const newUser = {
         id: data.user.uid,
+        bio: '',
+        location: '',
+        job: '',
         email: data.user.email,
         username: payload.username,
         registeredPosts: [],
@@ -172,23 +201,23 @@ export default {
   },
 
   // Auto signing in with local storage
-  autoSignIn ({commit, getters}, payload) {
-    commit('setUser', {
-      id: payload.uid,
-      email: payload.email,
-      username: payload.displayName,
-      registeredPosts: [],
-      interestedPosts: [],
-      fbKeys: []
-    })
+  autoSignIn ({commit}, payload) {
     firebase
       .firestore()
       .collection('users')
       .doc(payload.uid)
       .get()
-        .then(doc => {
-          commit('setUser', doc.data())
-        })
+      .then(doc => {
+        commit('setUser', doc.data())
+      })
+    // commit('setUser', {
+    //   id: payload.uid,
+    //   email: payload.email,
+    //   username: payload.displayName,
+    //   registeredPosts: [],
+    //   interestedPosts: [],
+    //   fbKeys: []
+    // })
   },
 
   // Logout of account

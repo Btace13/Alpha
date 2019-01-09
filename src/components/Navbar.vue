@@ -53,11 +53,13 @@
 </template>
 
 <script>
-
 export default {
   computed: {
     isUser () {
-      return this.$store.getters.User !== null && this.$store.getters.User !== undefined
+      return (
+        this.$store.getters.User !== null &&
+        this.$store.getters.User !== undefined
+      )
     },
     user () {
       return this.$store.getters.User
@@ -77,7 +79,10 @@ export default {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Get all "navbar-burger" elements
-  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0)
+  const $navbarBurgers = Array.prototype.slice.call(
+    document.querySelectorAll('.navbar-burger'),
+    0
+  )
   // Check if there are any navbar burgers
   if ($navbarBurgers.length > 0) {
     // Add a click event on each of them
@@ -97,8 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css" scoped>
-.hello{
+.hello {
   margin-top: 120px;
 }
-
 </style>

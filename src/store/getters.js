@@ -1,5 +1,4 @@
 export default {
-
   // Grabs User
   User (state) {
     return state.user
@@ -29,8 +28,8 @@ export default {
 
   // Grabs a single post
   singlePost (state) {
-    return (postId) => {
-      return state.posts.find((post) => {
+    return postId => {
+      return state.posts.find(post => {
         return post.id === postId
       })
     }

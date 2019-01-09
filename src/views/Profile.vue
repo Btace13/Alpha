@@ -35,16 +35,38 @@
       </section>
       <section class="container">
         <div class="profileItem">
-          <b-field label="Username" type="is-info">
+          <b-field label="Username">
             <span v-if="!editMode">{{user.username}}</span>
-            <b-input v-else placeholder="Username" rounded></b-input>
-        </b-field>
+            <b-input v-else placeholder="Username" 
+            v-model="updatedProfile.username"
+            :value="user.username" 
+            rounded
+            ></b-input>
+          </b-field>
+        </div>
+        <div class="profileItem">
+          <b-field label="Location">
+            <span v-if="!editMode">{{user.location}}</span>
+            <b-input v-else placeholder="Location" 
+            v-model="updatedProfile.location"
+            :value="user.location" rounded></b-input>
+          </b-field>
+        </div>
+        <div class="profileItem">
+          <b-field label="Occupation">
+            <span v-if="!editMode">{{user.job}}</span>
+            <b-input v-else placeholder="Occupation" 
+            v-model="updatedProfile.job"
+            :value="user.job" rounded></b-input>
+          </b-field>
         </div>
         <div class="profileItem">
           <b-field label="Bio">
             <span v-if="!editMode">{{user.bio}}</span>
-            <b-input v-else type="textarea" placeholder="Bio" rounded></b-input>
-        </b-field>
+            <b-input v-else type="textarea" placeholder="Bio" 
+            v-model="updatedProfile.bio"
+            :value="user.bio" rounded></b-input>
+          </b-field>
         </div>
         <div class="profileItem">
           <b-field label="Contact">
@@ -61,6 +83,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Phone Number"
+                  v-model="updatedProfile.contact.phone"
+                  :value="user.contact.phone"
                   icon="phone">
               </b-input>
             </b-field>
@@ -69,6 +93,8 @@
              <div class="column is-half is-full-mobile">
              <b-field>
               <b-input placeholder="Facebook Profile Link"
+                  v-model="updatedProfile.contact.facebook"
+                  :value="user.contact.facebook"
                   icon="facebook">
               </b-input>
             </b-field>            
@@ -77,6 +103,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Twitter Profile Link"
+                  v-model="updatedProfile.contact.twitter"
+                  :value="user.contact.twitter"
                   icon="twitter">
               </b-input>
             </b-field>
@@ -85,6 +113,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Linkedin Profile Link"
+                  v-model="updatedProfile.contact.linkedin"
+                  :value="user.contact.linkedin"
                   icon="linkedin">
               </b-input>
             </b-field>
@@ -93,6 +123,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Github Profile Link"
+                  v-model="updatedProfile.contact.github"
+                  :value="user.contact.github"
                   icon="github-face">
               </b-input>
             </b-field>
@@ -101,6 +133,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Instagram Profile Link"
+                  v-model="updatedProfile.contact.instagram"
+                  :value="user.contact.instagram"
                   icon="instagram">
               </b-input>
             </b-field>
@@ -109,6 +143,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Dribbble Profile Link"
+                  v-model="updatedProfile.contact.dribbble"
+                  :value="user.contact.dribbble"
                   icon="dribbble">
               </b-input>
             </b-field>
@@ -117,6 +153,8 @@
             <div class="column is-half is-full-mobile">
             <b-field>
               <b-input placeholder="Behance Profile Link"
+                  v-model="updatedProfile.contact.behance"
+                  :value="user.contact.behance"
                   icon="behance">
               </b-input>
             </b-field>
@@ -131,7 +169,11 @@
              <b-taginput
                 v-else
                 ellipsis
-                placeholder="skills">
+                placeholder="skills"
+                v-model="updatedProfile.contact.skills"
+                :value="user.skills"
+                >
+                
              </b-taginput>
         </b-field>
         </div>
@@ -142,23 +184,14 @@
 <script>
   export default {
     name: 'About',
+    computed: {
+      user () {
+        return this.$store.getters.User
+      }
+    },
     methods: {
       updateProfile () {
-        // this.$store.dispatch('updateProfile', {
-        //   username: this.updatedProfile.username,
-        //   bio: this.updatedProfile.bio,
-        //   skills: this.updatedProfile.skills,
-        //   contact: {
-        //     facebook: this.updatedProfile.contact.facebook,
-        //     twitter: this.updatedProfile.contact.twitter,
-        //     instagram: this.updatedProfile.contact.instagram,
-        //     linkedin: this.updatedProfile.contact.linkedin,
-        //     github: this.updatedProfile.contact.github,
-        //     behance: this.updatedProfile.contact.behance,
-        //     dribbble: this.updatedProfile.contact.dribbble,
-        //     phone: this.updatedProfile.contact.phone
-        //   }
-        // })
+        this.$store.dispatch('updateProfile', this.updatedProfile)
         this.$toast.open({
           message: 'Profile Updated!',
           type: 'is-success'
@@ -172,6 +205,8 @@
         updatedProfile: {
           username: '',
           bio: '',
+          location: '',
+          job: '',
           skills: [],
           contact: {
             facebook: '',
@@ -184,11 +219,6 @@
             phone: ''
           }
         }
-      }
-    },
-    computed: {
-      user () {
-        return this.$store.getters.User
       }
     }
   }
@@ -208,5 +238,8 @@
   }
   span.icon i {
     color: #333;
+  }
+  .content{
+    padding: 0 20px;
   }
 </style>
